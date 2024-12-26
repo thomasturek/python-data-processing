@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from src.fetcher.data_fetcher import get_aave_tvl
 from src.models.predictor import TVLPredictor
+from src.analysis.data_analyzer import TVLAnalyzer
 
 class TVLAnalyzer:
     def __init__(self, sequence_length=7):
