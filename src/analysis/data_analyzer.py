@@ -17,12 +17,23 @@ class TVLAnalyzer:
     
     def prepare_data(self):
         """Prepare data for PyTorch model."""
+
         raw_data = get_aave_tvl()
         if not raw_data:
             raise ValueError("No data returned by get_aave_tvl().")
 
         # Convert raw_data to a DataFrame
         df = pd.DataFrame(raw_data)
+
+        # Getting raw data from our fetcher file
+        df = get_aave_tvl()
+        
+        if df.empty:
+            raise ValueError("No data available for analysis")
+            
+        # Ensure we have enough data for the sequence length
+        if len(df) < self.sequence_length + 1:
+            raise ValueError(f"Not enough data points. Need at least {self.sequence_length + 1} data points")
         
         # Check for missing or invalid TVL data
         if df.empty or 'tvl' not in df.columns or df['tvl'].isnull().all():
@@ -43,7 +54,6 @@ class TVLAnalyzer:
             sequences.append(scaled_tvl[i:(i + self.sequence_length)])
             targets.append(scaled_tvl[i + self.sequence_length])
         
-        # Convert to PyTorch tensors
         X = torch.FloatTensor(sequences).to(self.device)
         y = torch.FloatTensor(targets).to(self.device)
         

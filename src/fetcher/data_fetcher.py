@@ -1,7 +1,11 @@
 import requests
+import pandas as pd
 from datetime import datetime
 
 def get_aave_tvl():
+    """
+    Fetches Aave TVL data from the DeFi Llama API and returns it as a pandas DataFrame
+    """
     url = "https://api.llama.fi/protocol/aave"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.5938.132 Safari/537.36"
@@ -27,8 +31,13 @@ def get_aave_tvl():
                 if start_date <= datetime.fromtimestamp(entry['date']).date() <= cutoff_date
             ]
             
-            return filtered_data
+            # Convert to DataFrame and sort by date
+            df = pd.DataFrame(filtered_data)
+            if df.empty:
+                raise ValueError("No data was retrieved from the API")
+                
+            return df.sort_values('date').reset_index(drop=True)
     else:
         raise ValueError(f"Error: Received status code {response.status_code}")
 
-    return []
+    return pd.DataFrame()

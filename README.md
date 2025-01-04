@@ -29,7 +29,7 @@ python -m venv myenv
 myenv\Scripts\activate
 
 #### Unix/MacOS
-python -m venv myenv
+python3 -m venv myenv
 source myenv/bin/activate
 
 3. Install dependencies with
