@@ -9,59 +9,67 @@ class TVLVisualizer:
         self.analyzer = TVLAnalyzer()
 
     def visualize_data(self):
-        historical_data = get_aave_tvl()  
-        if historical_data is None:
-            print("No historical data fetched (None returned).")
-            return
-        elif not historical_data:
-            print("No historical data fetched (Empty list or dictionary).")
-            return
-
         try:
-            historical_df = pd.DataFrame(historical_data, columns=['date', 'tvl'])
-            historical_df['date'] = pd.to_datetime(historical_df['date'])
-            historical_df.set_index('date', inplace=True)
-        except Exception as e:
-            print(f"Error processing historical data into DataFrame: {e}")
-            return
-
-        if historical_df.empty:
-            print("No historical data available after creating DataFrame.")
-            return
-
-        try:
-            stats = self.analyzer.analyze_current_trends(historical_df)
-            if not stats:
-                print("No trend statistics available.")
+            # Get historical data
+            historical_df = get_aave_tvl()
+            
+            if historical_df is None or historical_df.empty:
+                print("No historical data available.")
                 return
 
-            print("Current Trends Statistics:")
-            for key, value in stats.items():
-                print(f"{key}: {value}")
+            # Process dates
+            if 'date' in historical_df.columns:
+                historical_df['date'] = pd.to_datetime(historical_df['date'])
+                historical_df.set_index('date', inplace=True)
 
-            predictions_df = self.analyzer.predict_next_days(7)  # Specify number of days explicitly
-            if predictions_df is None or predictions_df.empty:
+            # Get trends analysis
+            stats = self.analyzer.analyze_current_trends(historical_df)
+            print("\nCurrent Trends Statistics:")
+            for key, value in stats.items():
+                if isinstance(value, float):
+                    print(f"{key}: {value:,.2f}")
+                else:
+                    print(f"{key}: {value}")
+
+            # Get predictions
+            predictions_df = self.analyzer.predict_next_days(7)
+            if predictions_df.empty:
                 print("No predictions available.")
                 return
 
             predictions_df['date'] = pd.to_datetime(predictions_df['date'])
             predictions_df.set_index('date', inplace=True)
 
+            # Create visualization
             plt.figure(figsize=(12, 6))
-            plt.plot(historical_df.index, historical_df['tvl'], label='Historical TVL', color='blue')
-            plt.plot(predictions_df.index, predictions_df['predicted_tvl'], label='Predicted TVL', color='orange', linestyle='--')
+            
+            # Plot historical data
+            plt.plot(historical_df.index, historical_df['tvl'], 
+                    label='Historical TVL', color='blue')
+            
+            # Plot predictions
+            plt.plot(predictions_df.index, predictions_df['predicted_tvl'],
+                    label='Predicted TVL', color='orange', linestyle='--')
             
             plt.xlabel('Date')
             plt.ylabel('Total Value Locked (USD)')
             plt.title('Historical TVL and Predicted TVL for AAVE')
             plt.legend()
-            plt.grid()
-            plt.show()
+            plt.grid(True)
             
-        except Exception as e:
-            print(f"Error during visualization: {e}")
-            return
+            # Format y-axis to use billions
+            plt.gca().yaxis.set_major_formatter(
+                plt.FuncFormatter(lambda x, p: f'${x/1e9:.1f}B')
+            )
+            
+            # Rotate x-axis labels for better readability
+            plt.xticks(rotation=45)
+            
+            # Adjust layout to prevent label cutoff
+            plt.tight_layout()
+            
+            plt.show()
 
-if __name__ == "__main__":
-    visualizer = TVLVisualizer()
-    visualizer.visualize_data()
+        except Exception as e:
+            print(f"Error during visualization: {str(e)}")
+            raise  # Re-raise for debugging
