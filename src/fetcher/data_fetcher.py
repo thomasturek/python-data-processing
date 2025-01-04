@@ -11,15 +11,24 @@ def get_aave_tvl():
     
     if response.status_code == 200:
         data = response.json()
-        start_date = datetime(2023,10,27).date()
+        start_date = datetime(2023, 10, 27).date()
         cutoff_date = datetime.now().date()
+
         if 'chainTvls' in data and 'Ethereum' in data['chainTvls']:
             ethereum_tvl_data = data['chainTvls']['Ethereum']['tvl']
-            for entry in ethereum_tvl_data:
-                entry_date = datetime.fromtimestamp(entry['date']).date()
-                if start_date <= entry_date <= cutoff_date:
-                    print(f"Date: {entry_date}, Total Liquidity (USD): {entry['totalLiquidityUSD']}")
+            
+            # Filter data by date range and extract relevant fields
+            filtered_data = [
+                {
+                    "date": datetime.fromtimestamp(entry['date']).date(),
+                    "tvl": entry['totalLiquidityUSD']
+                }
+                for entry in ethereum_tvl_data
+                if start_date <= datetime.fromtimestamp(entry['date']).date() <= cutoff_date
+            ]
+            
+            return filtered_data
     else:
-        print(f"Error: Received status code {response.status_code}")
+        raise ValueError(f"Error: Received status code {response.status_code}")
 
-get_aave_tvl()
+    return []
