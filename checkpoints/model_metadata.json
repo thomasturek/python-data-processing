@@ -1,0 +1,51 @@
+{
+    "20250205_112348": {
+        "model_path": "checkpoints/model_20250205_112348.pt",
+        "scaler_path": "checkpoints/scaler_20250205_112348.pkl",
+        "epoch": 9,
+        "loss": 0.545638382434845,
+        "date": "20250205_112348"
+    },
+    "20250205_112349": {
+        "model_path": "checkpoints/model_20250205_112349.pt",
+        "scaler_path": "checkpoints/scaler_20250205_112349.pkl",
+        "epoch": 17,
+        "loss": 0.5252820253372192,
+        "date": "20250205_112349"
+    },
+    "20250205_112350": {
+        "model_path": "checkpoints/model_20250205_112350.pt",
+        "scaler_path": "checkpoints/scaler_20250205_112350.pkl",
+        "epoch": 25,
+        "loss": 0.4856097996234894,
+        "date": "20250205_112350"
+    },
+    "20250205_112351": {
+        "model_path": "checkpoints/model_20250205_112351.pt",
+        "scaler_path": "checkpoints/scaler_20250205_112351.pkl",
+        "epoch": 35,
+        "loss": 0.41145652532577515,
+        "date": "20250205_112351"
+    },
+    "20250205_112352": {
+        "model_path": "checkpoints/model_20250205_112352.pt",
+        "scaler_path": "checkpoints/scaler_20250205_112352.pkl",
+        "epoch": 44,
+        "loss": 0.3655117452144623,
+        "date": "20250205_112352"
+    },
+    "20250205_112353": {
+        "model_path": "checkpoints/model_20250205_112353.pt",
+        "scaler_path": "checkpoints/scaler_20250205_112353.pkl",
+        "epoch": 55,
+        "loss": 0.3336469531059265,
+        "date": "20250205_112353"
+    },
+    "20250205_112354": {
+        "model_path": "checkpoints/model_20250205_112354.pt",
+        "scaler_path": "checkpoints/scaler_20250205_112354.pkl",
+        "epoch": 61,
+        "loss": 0.32360002398490906,
+        "date": "20250205_112354"
+    }
+}
